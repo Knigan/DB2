@@ -86,6 +86,7 @@ void MainWindow::make_query(const QString& queryStr) {
         ui->CurrentTable->setModel(querymodel);
         print_error("Query has processed successfully!");
         print_History(queryStr);
+        print_TablesList();
     } else if (queryStr.length() == 0) {
         print_error("Error: Query has been empty!");
     } else {
@@ -174,4 +175,3 @@ void MainWindow::clear_TablesList() {
 void MainWindow::on_TablesList_doubleClicked(const QModelIndex &index) {
     make_query("select * from " + index.data().toString() + ";");
 }
-

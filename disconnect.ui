@@ -52,7 +52,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>Are you sure you want to disconnect??</string>
+      <string>Are you sure you wanna disconnect?</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

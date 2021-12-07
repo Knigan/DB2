@@ -54,8 +54,8 @@ void MainWindow::on_actionDisconnect_triggered() {
     Disconnect dcon;
     if (dcon.exec() == QDialog::Accepted) {
         DB.removeDatabase("Database");
+        clear_TablesList();
     }
-    clear_TablesList();
 }
 
 QSqlDatabase MainWindow::connect_to_Database(ConnectionInfo &info) {

@@ -15,6 +15,8 @@
 #include <QStringListModel>
 #include <QSettings>
 #include <string>
+#include <QKeyEvent>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,10 +41,15 @@ public:
 private slots:
     void on_action_triggered();
     void on_actionDisconnect_triggered();
-    void SendButton();
-    void ClearButton();
-    void ClearHistoryButton();
+    void on_actionClearEdit_triggered();
+    void on_actionClearHistory_triggered();
     void on_TablesList_doubleClicked(const QModelIndex&);
+    void on_actionCreateMenTable_triggered();
+    void on_actionCreateWomenTable_triggered();
+    void on_actionDropMenTable_triggered();
+    void on_actionDropWomenTable_triggered();
+    void on_actionCreateMeetingsTable_triggered();
+    void on_actionDropMeetingsTable_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -53,6 +60,7 @@ private:
     void disconnect();
     QString get_query();
     void make_query(const QString&);
+    void SendRequest();
     void print_TablesList();
     void print_History(const QString&);
     void print_error(const QString&);
@@ -61,6 +69,9 @@ private:
     void save_history();
     void load_history();
     void clear_TablesList();
+
+protected:
+    void keyPressEvent(QKeyEvent*) override;
 };
 
 #endif // MAINWINDOW_H

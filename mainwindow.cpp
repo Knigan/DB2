@@ -2,6 +2,17 @@
 #include "ui_mainwindow.h"
 #include "opendialog.h"
 #include "disconnect.h"
+#include <ctime>
+#include <QSqlTableModel>
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    QWidget::keyPressEvent(event);
+    switch(event->key()) {
+    case Qt::Key_Return:
+        if (event->modifiers() == Qt::ControlModifier)
+            SendRequest();
+    }
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,12 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->splitter->setStretchFactor(0,1);
     ui->splitter->setStretchFactor(1,0);
 
-    connect(ui->SendButton, SIGNAL(clicked()), this, SLOT(SendButton()));
-    connect(ui->ClearButton, SIGNAL(clicked()), this, SLOT(ClearButton()));
-    connect(ui->ClearHistoryButton, SIGNAL(clicked()), this, SLOT(ClearHistoryButton()));
+    QKeyEvent* event = new QKeyEvent(QEvent::KeyPress, 0x01000005, Qt::ControlModifier);
+    keyPressEvent(event);
 
-    connection_settings = new QSettings("../connection_config.ini", QSettings::IniFormat, this);
-    history_settings = new QSettings("../history_config.ini", QSettings::IniFormat, this);
+    connection_settings = new QSettings("connection_config.ini", QSettings::IniFormat, this);
+    history_settings = new QSettings("history_config.ini", QSettings::IniFormat, this);
     load_history();
     ConnectionInfo info;
     load_ConnectionInfo(info);
@@ -58,6 +68,16 @@ void MainWindow::on_actionDisconnect_triggered() {
     }
 }
 
+void MainWindow::on_actionClearEdit_triggered() {
+    ui->CommandTextEdit->clear();
+    ui->ErrorLable->clear();
+}
+
+void MainWindow::on_actionClearHistory_triggered() {
+    ui->History->clear();
+    remove("history_config.ini");
+}
+
 QSqlDatabase MainWindow::connect_to_Database(ConnectionInfo &info) {
     QSqlDatabase DB = QSqlDatabase::addDatabase("QPSQL", "Database");
     DB.setHostName(info.host);
@@ -95,23 +115,13 @@ void MainWindow::make_query(const QString& queryStr) {
     }
 }
 
-void MainWindow::SendButton() {
+void MainWindow::SendRequest() {
     if (!DB.isValid()) {
         print_error("There is not connection to the database");
         return;
     }
     QString query = get_query();
     make_query(query);
-}
-
-void MainWindow::ClearButton() {
-    ui->CommandTextEdit->clear();
-    ui->ErrorLable->clear();
-}
-
-void MainWindow::ClearHistoryButton() {
-    ui->History->clear();
-    remove("../history_config.ini");
 }
 
 void MainWindow::print_TablesList() {
@@ -174,5 +184,76 @@ void MainWindow::clear_TablesList() {
 }
 
 void MainWindow::on_TablesList_doubleClicked(const QModelIndex &index) {
-    make_query("select * from " + index.data().toString() + ";");
+    make_query("SELECT * FROM " + index.data().toString() + ";");
 }
+
+void MainWindow::on_actionCreateMenTable_triggered() {
+    QString str = "CREATE TABLE kn_MenTable (name text PRIMARY KEY); ";
+    str += "INSERT INTO kn_MenTable(name) VALUES ";
+    std::vector<QString> vec = {"Аббас", "Абд", "Абдуллах", "Абид", "Абу", "Адам", "Адиль", "Азиз", "Азим", "Акиф", "Акиль", "Акрам", "Али", "Алим", "Амин", "Амир", "Анас", "Анвар", "Ариф",
+                                "Асад", "Асаф", "Ахмад", "Бадр", "Басиль", "Басир", "Билял", "Бурхан", "Вагиз", "Вазир", "Валид", "Вахид", "Гази", "Гайс", "Галиб", "Гариб", "Гафур",
+                                "Дани", "Дари", "Джабир", "Джавад", "Джамиль", "Джарир", "Джафар", "Джихад", "Джума", "Динар", "Захид", "Захир", "Заид", "Закария", "Заки", "Зайн", "Зариф",
+                                "Зафар", "Зейд", "Зирьяб", "Ибрахим", "Идрис", "Иззуддин", "Имран", "Иршад", "Иса", "Искандер", "Ислам", "Исмаил", "Кадир", "Казим", "Камиль", "Карим",
+                                "Кахтан", "Курбан", "Латиф", "Маджид", "Мади", "Маймун", "Малик", "Мансур", "Масуд", "Махди", "Махмуд", "Машхур", "Минхадж", "Муаз", "Мумин", "Мубарак",
+                                "Муджахид", "Музаффар", "Мукбиль", "Мукрин", "Мунтасир", "Мурад", "Муса", "Муслим", "Мустафа", "Мухаджир", "Мухаммад", "Мухаррам", "Мухтар",
+                                "Надим", "Надр", "Наиль", "Насиф", "Низар", "Рамадан", "Рами", "Рамиль", "Рашид", "Ридван", "Ризк", "Саад", "Сабит", "Сабих", "Саддам", "Садик", "Саид",
+                                "Сайф", "Салах", "Салих", "Салман", "Самир", "Сулейман", "Талиб", "Убар", "Усама", "Усман", "Фазиль", "Фаик", "Фарадж", "Фарид", "Фахим", "Фуад", "Фарах",
+                                "Хабиб", "Хади", "Хадир", "Хайдар", "Хайри", "Хайям", "Хаким", "Халид", "Халил", "Халим", "Хам", "Хамид", "Хамза", "Хаммам", "Хани", "Харис", "Хасан",
+                                "Хатим", "Хаттаб", "Хафиз", "Хафс", "Хашим", "Хидр", "Хиляль", "Хишам", "Хусейн", "Шаабан", "Шади", "Шакир", "Шамиль", "Шахид", "Шуайб", "Якуб", "Яруб"};
+    for (size_t i = 0; i < vec.size(); ++i) {
+        str += "('" + vec[i] + "')";
+        if (i + 1 == vec.size())
+            str += ";";
+        else
+            str += ", ";
+    }
+    make_query(str);
+}
+
+void MainWindow::on_actionCreateWomenTable_triggered() {
+    QString str = "CREATE TABLE kn_WomenTable (name text PRIMARY KEY); ";
+    str += "INSERT INTO kn_WomenTable(name) VALUES ";
+    std::vector<QString> vec = {"Агафья", "Аглая", "Агния", "Агриппина", "Аза", "Акулина", "Алевтина", "Александра", "Алина", "Алла", "Анастасия", "Ангелина", "Анжела", "Анжелика",
+                                "Анна", "Антонина", "Анфиса", "Валентина", "Валерия", "Варвара", "Василиса", "Вера", "Вероника", "Виктория", "Галина", "Глафира", "Гликерия", "Дана",
+                                "Дарья", "Евгения", "Евдокия", "Евлалия", "Евлампия", "Евпраксия", "Евфросиния", "Екатерина", "Елена", "Елизавета", "Епистима", "Ермиония", "Жанна",
+                                "Зинаида", "Злата", "Зоя", "Инга", "Инесса", "Инна", "Иоанна", "Ираида", "Ирина", "Ия", "Капитолина", "Карина", "Каролина", "Кира", "Клавдия", "Ксения",
+                                "Лада", "Лариса", "Лидия", "Лилия", "Любовь", "Людмила", "Маргарита", "Марина", "Мария", "Марфа", "Матрёна", "Милица", "Мирослава", "Надежда", "Наталья",
+                                "Нина", "Нонна", "Оксана", "Октябрина", "Олимпиада", "Ольга", "Павлина", "Пелагея", "Пинна", "Полина", "Прасковья", "Рада", "Раиса", "Римма", "Светлана",
+                                "Серафима", "Снежана", "София", "Таисия", "Тамара", "Татьяна", "Улита", "Ульяна", "Урсула", "Фаина", "Феврония", "Фёкла", "Феодора", "Целестина",
+                                "Юлия", "Яна", "Ярослава"};
+    for (size_t i = 0; i < vec.size(); ++i) {
+        str += "('" + vec[i] + "')";
+        if (i + 1 == vec.size())
+            str += ";";
+        else
+            str += ", ";
+    }
+    make_query(str);
+}
+
+void MainWindow::on_actionDropMenTable_triggered() {
+    make_query("DROP TABLE kn_MenTable");
+}
+
+void MainWindow::on_actionDropWomenTable_triggered() {
+    make_query("DROP TABLE kn_WomenTable");
+}
+
+void MainWindow::on_actionCreateMeetingsTable_triggered() {
+    QString str = "CREATE TABLE kn_MeetingsTable "
+                  "(id int PRIMARY KEY, date text, time text, man text, woman text, FOREIGN KEY (man) references kn_MenTable(men) on DELETE CASCADE on UPDATE CASCADE, "
+                  "FOREIGN KEY (woman) references kn_WomanTable(women) on DELETE CASCADE on UPDATE CASCADE); ";
+    str += "INSERT INTO kn_MeetingsTable(id, date, text, man, woman) VALUES ";
+    srand(time(0));
+    QSqlTableModel* men = new QSqlTableModel(this, DB);
+    QSqlTableModel* women = new QSqlTableModel(this, DB);
+    men->setTable("kn_MenTable");
+    women->setTable("kn_WomenTable");
+
+
+}
+
+void MainWindow::on_actionDropMeetingsTable_triggered() {
+    make_query("DROP TABLE kn_MeetingsTable");
+}
+

@@ -28,13 +28,6 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">
-     <widget class="QPushButton" name="ClearButton">
-      <property name="text">
-       <string>Clear edit</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
      <widget class="QLabel" name="ErrorLable">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -44,20 +37,6 @@
       </property>
       <property name="text">
        <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="SendButton">
-      <property name="text">
-       <string>Send</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="ClearHistoryButton">
-      <property name="text">
-       <string>Clear history</string>
       </property>
      </widget>
     </item>
@@ -172,8 +151,24 @@
     <addaction name="action"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
+    <addaction name="actionClearEdit"/>
+    <addaction name="actionClearHistory"/>
+   </widget>
+   <widget class="QMenu" name="menuMeetings">
+    <property name="title">
+     <string>Meetings</string>
+    </property>
+    <addaction name="actionCreateMenTable"/>
+    <addaction name="actionCreateWomenTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionDropMenTable"/>
+    <addaction name="actionDropWomenTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionCreateMeetingsTable"/>
+    <addaction name="actionDropMeetingsTable"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menuMeetings"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -183,6 +178,46 @@
   <action name="actionDisconnect">
    <property name="text">
     <string>Disconnect</string>
+   </property>
+  </action>
+  <action name="actionClearEdit">
+   <property name="text">
+    <string>Clear edit</string>
+   </property>
+  </action>
+  <action name="actionClearHistory">
+   <property name="text">
+    <string>Clear history</string>
+   </property>
+  </action>
+  <action name="actionDropMenTable">
+   <property name="text">
+    <string>Drop men table</string>
+   </property>
+  </action>
+  <action name="actionDropWomenTable">
+   <property name="text">
+    <string>Drop women table</string>
+   </property>
+  </action>
+  <action name="actionCreateMeetingsTable">
+   <property name="text">
+    <string>Create meetings table</string>
+   </property>
+  </action>
+  <action name="actionDropMeetingsTable">
+   <property name="text">
+    <string>Drop meetings table</string>
+   </property>
+  </action>
+  <action name="actionCreateWomenTable">
+   <property name="text">
+    <string>Create women table</string>
+   </property>
+  </action>
+  <action name="actionCreateMenTable">
+   <property name="text">
+    <string>Create men table</string>
    </property>
   </action>
  </widget>

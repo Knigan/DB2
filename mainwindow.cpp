@@ -3,7 +3,6 @@
 #include "opendialog.h"
 #include "disconnect.h"
 #include <ctime>
-#include <QSqlTableModel>
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     QWidget::keyPressEvent(event);
@@ -188,8 +187,8 @@ void MainWindow::on_TablesList_doubleClicked(const QModelIndex &index) {
 }
 
 void MainWindow::on_actionCreateMenTable_triggered() {
-    QString str = "CREATE TABLE kn_MenTable (name text PRIMARY KEY); ";
-    str += "INSERT INTO kn_MenTable(name) VALUES ";
+    QString str = "CREATE TABLE kn_MenTable (id int NOT NULL, name text PRIMARY KEY); ";
+    str += "INSERT INTO kn_MenTable(id, name) VALUES ";
     std::vector<QString> vec = {"Аббас", "Абд", "Абдуллах", "Абид", "Абу", "Адам", "Адиль", "Азиз", "Азим", "Акиф", "Акиль", "Акрам", "Али", "Алим", "Амин", "Амир", "Анас", "Анвар", "Ариф",
                                 "Асад", "Асаф", "Ахмад", "Бадр", "Басиль", "Басир", "Билял", "Бурхан", "Вагиз", "Вазир", "Валид", "Вахид", "Гази", "Гайс", "Галиб", "Гариб", "Гафур",
                                 "Дани", "Дари", "Джабир", "Джавад", "Джамиль", "Джарир", "Джафар", "Джихад", "Джума", "Динар", "Захид", "Захир", "Заид", "Закария", "Заки", "Зайн", "Зариф",
@@ -201,7 +200,8 @@ void MainWindow::on_actionCreateMenTable_triggered() {
                                 "Хабиб", "Хади", "Хадир", "Хайдар", "Хайри", "Хайям", "Хаким", "Халид", "Халил", "Халим", "Хам", "Хамид", "Хамза", "Хаммам", "Хани", "Харис", "Хасан",
                                 "Хатим", "Хаттаб", "Хафиз", "Хафс", "Хашим", "Хидр", "Хиляль", "Хишам", "Хусейн", "Шаабан", "Шади", "Шакир", "Шамиль", "Шахид", "Шуайб", "Якуб", "Яруб"};
     for (size_t i = 0; i < vec.size(); ++i) {
-        str += "('" + vec[i] + "')";
+        QString number;
+        str += "(" + number.setNum(i + 1) + ", '" + vec[i] + "')";
         if (i + 1 == vec.size())
             str += ";";
         else
@@ -211,8 +211,8 @@ void MainWindow::on_actionCreateMenTable_triggered() {
 }
 
 void MainWindow::on_actionCreateWomenTable_triggered() {
-    QString str = "CREATE TABLE kn_WomenTable (name text PRIMARY KEY); ";
-    str += "INSERT INTO kn_WomenTable(name) VALUES ";
+    QString str = "CREATE TABLE kn_WomenTable (id int NOT NULL, name text PRIMARY KEY); ";
+    str += "INSERT INTO kn_WomenTable(id, name) VALUES ";
     std::vector<QString> vec = {"Агафья", "Аглая", "Агния", "Агриппина", "Аза", "Акулина", "Алевтина", "Александра", "Алина", "Алла", "Анастасия", "Ангелина", "Анжела", "Анжелика",
                                 "Анна", "Антонина", "Анфиса", "Валентина", "Валерия", "Варвара", "Василиса", "Вера", "Вероника", "Виктория", "Галина", "Глафира", "Гликерия", "Дана",
                                 "Дарья", "Евгения", "Евдокия", "Евлалия", "Евлампия", "Евпраксия", "Евфросиния", "Екатерина", "Елена", "Елизавета", "Епистима", "Ермиония", "Жанна",
@@ -222,7 +222,8 @@ void MainWindow::on_actionCreateWomenTable_triggered() {
                                 "Серафима", "Снежана", "София", "Таисия", "Тамара", "Татьяна", "Улита", "Ульяна", "Урсула", "Фаина", "Феврония", "Фёкла", "Феодора", "Целестина",
                                 "Юлия", "Яна", "Ярослава"};
     for (size_t i = 0; i < vec.size(); ++i) {
-        str += "('" + vec[i] + "')";
+        QString number;
+        str += "(" + number.setNum(i + 1) + ", '" + vec[i] + "')";
         if (i + 1 == vec.size())
             str += ";";
         else
@@ -241,16 +242,9 @@ void MainWindow::on_actionDropWomenTable_triggered() {
 
 void MainWindow::on_actionCreateMeetingsTable_triggered() {
     QString str = "CREATE TABLE kn_MeetingsTable "
-                  "(id int PRIMARY KEY, date text, time text, man text, woman text, FOREIGN KEY (man) references kn_MenTable(men) on DELETE CASCADE on UPDATE CASCADE, "
-                  "FOREIGN KEY (woman) references kn_WomanTable(women) on DELETE CASCADE on UPDATE CASCADE); ";
-    str += "INSERT INTO kn_MeetingsTable(id, date, text, man, woman) VALUES ";
-    srand(time(0));
-    QSqlTableModel* men = new QSqlTableModel(this, DB);
-    QSqlTableModel* women = new QSqlTableModel(this, DB);
-    men->setTable("kn_MenTable");
-    women->setTable("kn_WomenTable");
-
-
+                  "(id int NOT NULL PRIMARY KEY, date text, time text, man text, woman text, FOREIGN KEY (man) references kn_MenTable(name) on DELETE CASCADE on UPDATE CASCADE, "
+                  "FOREIGN KEY (woman) references kn_WomenTable(name) on DELETE CASCADE on UPDATE CASCADE); ";
+    make_query(str);
 }
 
 void MainWindow::on_actionDropMeetingsTable_triggered() {

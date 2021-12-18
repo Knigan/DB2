@@ -242,9 +242,10 @@ void MainWindow::on_actionDropWomenTable_triggered() {
 
 void MainWindow::on_actionCreateMeetingsTable_triggered() {
     QString str = "CREATE TABLE kn_MeetingsTable "
-                  "(id int NOT NULL PRIMARY KEY, date text, time text, man text, woman text, FOREIGN KEY (man) references kn_MenTable(name) on DELETE CASCADE on UPDATE CASCADE, "
+                  "(id int NOT NULL PRIMARY KEY, time text, man text, woman text, "
+                  "FOREIGN KEY (man) references kn_MenTable(name) on DELETE CASCADE on UPDATE CASCADE, "
                   "FOREIGN KEY (woman) references kn_WomenTable(name) on DELETE CASCADE on UPDATE CASCADE); ";
-    make_query(str);
+    make_query(str += " SELECT meetings();");
 }
 
 void MainWindow::on_actionDropMeetingsTable_triggered() {

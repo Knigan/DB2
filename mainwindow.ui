@@ -159,13 +159,19 @@
      <string>Meetings</string>
     </property>
     <addaction name="actionCreateMenTable"/>
-    <addaction name="actionCreateWomenTable"/>
-    <addaction name="separator"/>
     <addaction name="actionDropMenTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionCreateWomenTable"/>
     <addaction name="actionDropWomenTable"/>
     <addaction name="separator"/>
     <addaction name="actionCreateMeetingsTable"/>
     <addaction name="actionDropMeetingsTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionSearch"/>
+    <addaction name="actionIndexSearch"/>
+    <addaction name="separator"/>
+    <addaction name="actionAnalyzeSearch"/>
+    <addaction name="actionAnalyzeIndexSearch"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuMeetings"/>
@@ -218,6 +224,26 @@
   <action name="actionCreateMenTable">
    <property name="text">
     <string>Create men table</string>
+   </property>
+  </action>
+  <action name="actionSearch">
+   <property name="text">
+    <string>Search</string>
+   </property>
+  </action>
+  <action name="actionIndexSearch">
+   <property name="text">
+    <string>Search with indexes</string>
+   </property>
+  </action>
+  <action name="actionAnalyzeSearch">
+   <property name="text">
+    <string>Analyze search</string>
+   </property>
+  </action>
+  <action name="actionAnalyzeIndexSearch">
+   <property name="text">
+    <string>Analyze index search</string>
    </property>
   </action>
  </widget>

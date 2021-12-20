@@ -50,6 +50,10 @@ private slots:
     void on_actionDropWomenTable_triggered();
     void on_actionCreateMeetingsTable_triggered();
     void on_actionDropMeetingsTable_triggered();
+    void on_actionSearch_triggered();
+    void on_actionIndexSearch_triggered();
+    void on_actionAnalyzeSearch_triggered();
+    void on_actionAnalyzeIndexSearch_triggered();
 
 private:
     Ui::MainWindow *ui;

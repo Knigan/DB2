@@ -187,8 +187,8 @@ void MainWindow::on_TablesList_doubleClicked(const QModelIndex &index) {
 }
 
 void MainWindow::on_actionCreateMenTable_triggered() {
-    QString str = "CREATE TABLE kn_MenTable (id int NOT NULL, name text PRIMARY KEY); ";
-    str += "INSERT INTO kn_MenTable(id, name) VALUES ";
+    make_query("CREATE TABLE kn_MenTable (id int NOT NULL, name text PRIMARY KEY);");
+    QString str = "INSERT INTO kn_MenTable(id, name) VALUES ";
     std::vector<QString> vec = {"Аббас", "Абд", "Абдуллах", "Абид", "Абу", "Адам", "Адиль", "Азиз", "Азим", "Акиф", "Акиль", "Акрам", "Али", "Алим", "Амин", "Амир", "Анас", "Анвар", "Ариф",
                                 "Асад", "Асаф", "Ахмад", "Бадр", "Басиль", "Басир", "Билял", "Бурхан", "Вагиз", "Вазир", "Валид", "Вахид", "Гази", "Гайс", "Галиб", "Гариб", "Гафур",
                                 "Дани", "Дари", "Джабир", "Джавад", "Джамиль", "Джарир", "Джафар", "Джихад", "Джума", "Динар", "Захид", "Захир", "Заид", "Закария", "Заки", "Зайн", "Зариф",
@@ -211,8 +211,8 @@ void MainWindow::on_actionCreateMenTable_triggered() {
 }
 
 void MainWindow::on_actionCreateWomenTable_triggered() {
-    QString str = "CREATE TABLE kn_WomenTable (id int NOT NULL, name text PRIMARY KEY); ";
-    str += "INSERT INTO kn_WomenTable(id, name) VALUES ";
+    make_query("CREATE TABLE kn_WomenTable (id int NOT NULL, name text PRIMARY KEY);");
+    QString str = "INSERT INTO kn_WomenTable(id, name) VALUES ";
     std::vector<QString> vec = {"Агафья", "Аглая", "Агния", "Агриппина", "Аза", "Акулина", "Алевтина", "Александра", "Алина", "Алла", "Анастасия", "Ангелина", "Анжела", "Анжелика",
                                 "Анна", "Антонина", "Анфиса", "Валентина", "Валерия", "Варвара", "Василиса", "Вера", "Вероника", "Виктория", "Галина", "Глафира", "Гликерия", "Дана",
                                 "Дарья", "Евгения", "Евдокия", "Евлалия", "Евлампия", "Евпраксия", "Евфросиния", "Екатерина", "Елена", "Елизавета", "Епистима", "Ермиония", "Жанна",
@@ -233,22 +233,56 @@ void MainWindow::on_actionCreateWomenTable_triggered() {
 }
 
 void MainWindow::on_actionDropMenTable_triggered() {
-    make_query("DROP TABLE kn_MenTable");
+    make_query("DROP TABLE kn_MenTable;");
 }
 
 void MainWindow::on_actionDropWomenTable_triggered() {
-    make_query("DROP TABLE kn_WomenTable");
+    make_query("DROP TABLE kn_WomenTable;");
 }
 
 void MainWindow::on_actionCreateMeetingsTable_triggered() {
-    QString str = "CREATE TABLE kn_MeetingsTable "
+    make_query("CREATE TABLE kn_MeetingsTable "
                   "(id int NOT NULL PRIMARY KEY, time text, man text, woman text, "
                   "FOREIGN KEY (man) references kn_MenTable(name) on DELETE CASCADE on UPDATE CASCADE, "
-                  "FOREIGN KEY (woman) references kn_WomenTable(name) on DELETE CASCADE on UPDATE CASCADE); ";
-    make_query(str += " SELECT meetings();");
+                  "FOREIGN KEY (woman) references kn_WomenTable(name) on DELETE CASCADE on UPDATE CASCADE);");
+    make_query("SELECT meetings();");
 }
 
 void MainWindow::on_actionDropMeetingsTable_triggered() {
-    make_query("DROP TABLE kn_MeetingsTable");
+    make_query("DROP TABLE kn_MeetingsTable;");
+}
+
+void MainWindow::on_actionSearch_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("SELECT * FROM kn_meetingstable WHERE man = '" + str + "';");
+    }
+    else make_query("SELECT * FROM kn_meetingstable;");
+}
+
+void MainWindow::on_actionIndexSearch_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("CREATE INDEX idx ON kn_meetingstable USING GIN(to_tsvector('russian', man));");
+        make_query("SELECT * FROM kn_MeetingsTable WHERE to_tsvector('russian', man) @@ to_tsquery('russian', '" + str +  "');");
+    }
+}
+
+void MainWindow::on_actionAnalyzeSearch_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable WHERE man = '" + str + "';");
+    }
+    else make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable;");
+}
+
+void MainWindow::on_actionAnalyzeIndexSearch_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("CREATE INDEX idx ON kn_meetingstable USING GIN(to_tsvector('russian', man));");
+        make_query("EXPLAIN ANALYZE SELECT * FROM kn_MeetingsTable WHERE to_tsvector('russian', man) @@ to_tsquery('russian', '" + str +  "');");
+    }
 }
 

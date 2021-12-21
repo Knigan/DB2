@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QKeyEvent* event = new QKeyEvent(QEvent::KeyPress, 0x01000005, Qt::ControlModifier);
     keyPressEvent(event);
-
     connection_settings = new QSettings("connection_config.ini", QSettings::IniFormat, this);
     history_settings = new QSettings("history_config.ini", QSettings::IniFormat, this);
     load_history();
@@ -258,14 +257,23 @@ void MainWindow::on_actionSearch_triggered() {
         make_query("DROP INDEX IF EXISTS idx;");
         make_query("SELECT * FROM kn_meetingstable WHERE man = '" + str + "';");
     }
-    else make_query("SELECT * FROM kn_meetingstable;");
 }
 
-void MainWindow::on_actionIndexSearch_triggered() {
+void MainWindow::on_actionIndexSearchBTREE_triggered() {
     QString str = ui->CommandTextEdit->toPlainText();
     if (str.length() != 0) {
-        make_query("CREATE INDEX idx ON kn_meetingstable USING GIN(to_tsvector('russian', man));");
-        make_query("SELECT * FROM kn_MeetingsTable WHERE to_tsvector('russian', man) @@ to_tsquery('russian', '" + str +  "');");
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("CREATE INDEX idx ON kn_meetingstable USING BTREE(man);");
+        make_query("SELECT * FROM kn_MeetingsTable WHERE man = '" + str +  "';");
+    }
+}
+
+void MainWindow::on_actionIndexSearchHash_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("CREATE INDEX idx ON kn_meetingstable USING HASH(man);");
+        make_query("SELECT * FROM kn_MeetingsTable WHERE man = '" + str +  "';");
     }
 }
 
@@ -275,14 +283,23 @@ void MainWindow::on_actionAnalyzeSearch_triggered() {
         make_query("DROP INDEX IF EXISTS idx;");
         make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable WHERE man = '" + str + "';");
     }
-    else make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable;");
 }
 
-void MainWindow::on_actionAnalyzeIndexSearch_triggered() {
+void MainWindow::on_actionAnalyzeIndexSearchBTREE_triggered() {
     QString str = ui->CommandTextEdit->toPlainText();
     if (str.length() != 0) {
-        make_query("CREATE INDEX idx ON kn_meetingstable USING GIN(to_tsvector('russian', man));");
-        make_query("EXPLAIN ANALYZE SELECT * FROM kn_MeetingsTable WHERE to_tsvector('russian', man) @@ to_tsquery('russian', '" + str +  "');");
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("CREATE INDEX idx ON kn_meetingstable USING BTREE(man);");
+        make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable WHERE man = '" + str +  "';");
+    }
+}
+
+void MainWindow::on_actionAnalyzeIndexSearchHash_triggered() {
+    QString str = ui->CommandTextEdit->toPlainText();
+    if (str.length() != 0) {
+        make_query("DROP INDEX IF EXISTS idx;");
+        make_query("CREATE INDEX idx ON kn_meetingstable USING HASH(man);");
+        make_query("EXPLAIN ANALYZE SELECT * FROM kn_meetingstable WHERE man = '" + str +  "';");
     }
 }
 

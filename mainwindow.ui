@@ -168,10 +168,12 @@
     <addaction name="actionDropMeetingsTable"/>
     <addaction name="separator"/>
     <addaction name="actionSearch"/>
-    <addaction name="actionIndexSearch"/>
+    <addaction name="actionIndexSearchBTREE"/>
+    <addaction name="actionIndexSearchHash"/>
     <addaction name="separator"/>
-    <addaction name="actionAnalyzeSearch"/>
-    <addaction name="actionAnalyzeIndexSearch"/>
+    <addaction name="actionAnalyzeSearchBTree"/>
+    <addaction name="actionAnalyzeIndexSearchBTREE"/>
+    <addaction name="actionAnalyzeIndexSearchHash"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuMeetings"/>
@@ -231,19 +233,29 @@
     <string>Search</string>
    </property>
   </action>
-  <action name="actionIndexSearch">
+  <action name="actionIndexSearchBTREE">
    <property name="text">
-    <string>Search with indexes</string>
+    <string>Search with indexes BTREE</string>
    </property>
   </action>
-  <action name="actionAnalyzeSearch">
+  <action name="actionAnalyzeSearchBTree">
    <property name="text">
     <string>Analyze search</string>
    </property>
   </action>
-  <action name="actionAnalyzeIndexSearch">
+  <action name="actionAnalyzeIndexSearchBTREE">
    <property name="text">
-    <string>Analyze index search</string>
+    <string>Analyze index search BTREE</string>
+   </property>
+  </action>
+  <action name="actionIndexSearchHash">
+   <property name="text">
+    <string>Search with indexes Hash</string>
+   </property>
+  </action>
+  <action name="actionAnalyzeIndexSearchHash">
+   <property name="text">
+    <string>Analyze index search Hash</string>
    </property>
   </action>
  </widget>
